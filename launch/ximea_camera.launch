@@ -1,0 +1,12 @@
+<launch>
+
+<!-- Camera Node -->
+<node name="ximea" pkg="ximea_camera" type="ximea_camera_node" output="screen" >
+  <param name="frame_rate" type="int" value="20" />
+</node>
+
+</launch>
+
+
+
+
