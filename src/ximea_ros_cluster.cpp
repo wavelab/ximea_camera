@@ -21,11 +21,11 @@ std::string getCamNameFromYaml(std::string file_name){
 		exit(-1); //this has to be changed
 	}
 	
-	YAML::Parser parser(fin);
-	YAML::Node doc;
-	parser.GetNextDocument(doc);
+	//YAML::Parser parser(fin);
+	YAML::Node doc = YAML::LoadFile(file_name);
+	//parser.GetNextDocument(doc);
 	std::string ret;
-	doc["cam_name"] >> ret;
+	ret = doc["cam_name"].as<std::string>();
 	return ret;
 }
 

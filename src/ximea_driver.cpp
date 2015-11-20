@@ -221,9 +221,9 @@ int ximea_driver::readParamsFromFile(std::string file_name){
 		exit(-1);
 	}
 	
-	YAML::Parser parser(fin);
-	YAML::Node doc;
-	parser.GetNextDocument(doc);
+	//YAML::Parser parser(fin);
+	YAML::Node doc = YAML::LoadFile(file_name);
+	//parser.GetNextDocument(doc);
 	
 	//tmp variables to pass through accessor functions for validation
 	std::string tmpS;
@@ -232,75 +232,77 @@ int ximea_driver::readParamsFromFile(std::string file_name){
 	
 	
 	try{
-		doc["serial_no"] >> serial_no_;
+		//doc["serial_no"] >> serial_no_;
+		serial_no_=	doc["serial_no"].as<int>();
 	}
 	catch(std::runtime_error){}
 	try{
-		doc["cam_name"] >> cam_name_;
-	}
-	catch(std::runtime_error){}
-
-	try{
-		doc["yaml_url"] >> yaml_url_;
+		//doc["cam_name"] >> cam_name_;
+		cam_name_=	doc["cam_name"].as<std::string>();
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["cams_on_bus"] >> cams_on_bus_;
+		yaml_url_ = doc["yaml_url"].as<std::string>();
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["bandwidth_safety_margin"] >> bandwidth_safety_margin_;
+		cams_on_bus_ = doc["cams_on_bus"].as<int>() ;
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["frame_rate"] >> frame_rate_;
+		bandwidth_safety_margin_ = doc["bandwidth_safety_margin"].as<int>();
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["exposure_time"] >> exposure_time_;
+		frame_rate_ = doc["frame_rate"].as<int>() ;
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["auto_exposure"] >> auto_exposure_;
+		exposure_time_ = doc["exposure_time"].as<int>();
+	}
+	catch(std::runtime_error){}
+
+	try{
+		auto_exposure_ = doc["auto_exposure"].as<bool>();
 	}
 	catch(std::runtime_error){}
 	
 	try{
-		doc["binning_enabled"] >> binning_enabled_;
+		binning_enabled_ = doc["binning_enabled"].as<bool>();
 	}
 	catch(std::runtime_error){}
 	
 	try{
-		doc["downsample_factor_"] >> downsample_factor_;
+		downsample_factor_ = doc["downsample_factor_"].as<int>();
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["rect_left"] >> rect_left_;
+		rect_left_ = doc["rect_left"].as<int>(); 
 	}
 	catch(std::runtime_error){}
 	try{
-		doc["rect_top"] >> rect_top_;
+		rect_top_ = doc["rect_top"].as<int>();
 	}
 	catch(std::runtime_error){}
 	try{
-		doc["rect_width"] >> rect_width_;
+		rect_width_ = doc["rect_width"].as<int>();
 	}
 	catch(std::runtime_error){}
 
 	try{
-		doc["rect_height"] >> rect_height_;
+		rect_height_ = doc["rect_height"].as<int>();
 	}
 	catch(std::runtime_error){}
 	setROI(rect_left_, rect_top_, rect_width_, rect_height_);
 
 	try{
-		doc["image_data_format"] >> image_data_format_;
+		image_data_format_=doc["image_data_format"].as<std::string>();
 	}
 	catch(std::runtime_error){}
 	setImageDataFormat(image_data_format_);

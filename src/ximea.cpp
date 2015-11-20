@@ -9,9 +9,9 @@ int main(int argc, char ** argv){
 	ros::NodeHandle nh;		//standard ros nodehanlde
 	ros::NodeHandle pnh("~");	//needed for parameter server
 	int frame_rate_;
-	std::string yaml_file1 = "/home/wavelab3/catkin_ws/src/ximea_camera/src/cam1.yaml";
-	std::string yaml_file2 = "/home/wavelab3/catkin_ws/src/ximea_camera/src/cam2.yaml";
-	std::string yaml_file3 = "/home/wavelab3/catkin_ws/src/ximea_camera/src/cam3.yaml";
+	std::string yaml_file1 = "/home/adas/indigo/catkin_ws/src/ximea_camera/src/cam1.yaml";
+	std::string yaml_file2 = "/home/adas/indigo/catkin_ws/src/ximea_camera/src/cam2.yaml";
+	std::string yaml_file3 = "/home/adas/indigo/catkin_ws/src/ximea_camera/src/cam3.yaml";
 	//std::string yaml_file4 = "/home/adas/catkin_ws/src/ximea_camera/src/cam4.yaml";
 
   	pnh.param<int>("frame_rate", frame_rate_, 100);
@@ -27,8 +27,8 @@ int main(int argc, char ** argv){
 	std::vector<std::string> file_names;
 
 	file_names.push_back(yaml_file1);
-	file_names.push_back(yaml_file2);
-	file_names.push_back(yaml_file3);
+	//file_names.push_back(yaml_file2);
+	//file_names.push_back(yaml_file3);
 	//file_names.push_back(yaml_file4);
 
 	ximea_ros_cluster xd(file_names);
