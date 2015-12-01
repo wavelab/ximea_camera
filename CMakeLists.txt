@@ -95,6 +95,8 @@ catkin_package(
   DEPENDS boost
 )
 
+include_directories(include)
+
 ###########
 ## Build ##
 ###########

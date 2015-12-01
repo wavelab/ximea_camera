@@ -32,50 +32,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#include <ximea_camera/ximea_ros_cluster.h>
+#include "ximea_ros_driver.h"
+#include <boost/thread.hpp>
 
-using namespace std;
+class ximea_ros_cluster{
+	public:
+	//ximea_ros_cluster(int num_cams, std::vector<std::string> config_files); TODO: this is what we actually need will test with the one below
+	//ximea_ros_cluster(const ros::NodeHandle & nh, int num_cams);
+	ximea_ros_cluster(int num_cams);
+	ximea_ros_cluster(std::vector < std::string > filenames);
+	//ximea_ros_cluster(const Nodehandle & nh, std::vector<ximea_ros_driver> cams);
+	void add_camera(ximea_ros_driver xd);
+	void remove_camera(int serial_no);
 
-int main(int argc, char ** argv){
-	//string file = "/home/wavelab/WavelabRepo/projects/drivers/ximea_camera/src/cam1.yaml";
-	//ximea_driver xd(file);
-	ros::init(argc,argv, "ximea");
-	ros::NodeHandle nh;		//standard ros nodehanlde
-	ros::NodeHandle pnh("~");	//needed for parameter server
-	int frame_rate_;
-	std::string yaml_file1 = "/home/adas/indigo/catkin_ws/src/ximea_camera/config/cam1.yaml";
-	std::string yaml_file2 = "/home/adas/indigo/catkin_ws/src/ximea_camera/config/cam2.yaml";
-	std::string yaml_file3 = "/home/adas/indigo/catkin_ws/src/ximea_camera/config/cam3.yaml";
-	//std::string yaml_file4 = "/home/adas/catkin_ws/src/ximea_camera/src/cam4.yaml";
+	//cluster functions
+	void clusterInit();
+	void clusterAcquire();
+	void clusterPublishImages();
+	void clusterPublishCamInfo();
+	void clusterPublishImageAndCamInfo();
+	void clusterEnd();
+	bool isDeviceOpen(){return devices_open_;}
+	
+	//individual camera functions (encapsulated for thread security)
+	void setExposure(int serial_no, int time);
+	void setImageDataFormat(int serial_no, std::string s);
+	void setROI(int serial_no, int l, int t, int w, int h);
 
-  	pnh.param<int>("frame_rate", frame_rate_, 100);
-	ros::Rate loop(frame_rate_);
-	//ximea_ros_driver xd(nh, "camera1", 0);
-	//xd.openDevice();
-	//xd.setImageDataFormat("XI_RGB24");
-	//xd.setExposure(5000);
-	//xd.setROI(172, 274, 940, 480);
-	//xd.startAcquisition();
-	//ximea_ros_cluster xd(1);
-
-	std::vector<std::string> file_names;
-
-	file_names.push_back(yaml_file1);
-	file_names.push_back(yaml_file2);
-	//file_names.push_back(yaml_file3);
-	//file_names.push_back(yaml_file4);
-
-	ximea_ros_cluster xd(file_names);
-	//std::cout << "we're here" << std::endl;
-	xd.clusterInit();
-	while (ros::ok()){	//TODO: need to robustify against replugging and cntrlc
-		ros::spinOnce();
-	//	xd.acquireImage();
-		xd.clusterAcquire();
-	//	xd.publishImageAndCamInfo();
-		xd.clusterPublishImageAndCamInfo();
-		loop.sleep();
-	}
-	xd.clusterEnd();
-	return 1;
-}
+	private:
+	std::vector<ximea_ros_driver> cams_;
+	std::vector<boost::thread*> threads_;
+	bool devices_open_;
+	int num_cams_;
+	int getCameraIndex(int serial_no);	//this is private so that no one tries to be smart and open/close our cameras externally, in which case we cannot manage
+	const int USB_BUS_SAFETY_MARGIN;
+	const int USB3_BANDWIDTH;
+	bool fixed_init_;
+};

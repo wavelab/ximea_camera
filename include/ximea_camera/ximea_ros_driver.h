@@ -32,50 +32,39 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-#include <ximea_camera/ximea_ros_cluster.h>
+#include "ximea_driver.h"
+#include <ros/ros.h>
+#include <image_transport/image_transport.h>
+#include <image_transport/publisher.h>
+#include <sensor_msgs/Image.h>
+#include <sensor_msgs/CameraInfo.h>
+#include <camera_info_manager/camera_info_manager.h>
 
-using namespace std;
 
-int main(int argc, char ** argv){
-	//string file = "/home/wavelab/WavelabRepo/projects/drivers/ximea_camera/src/cam1.yaml";
-	//ximea_driver xd(file);
-	ros::init(argc,argv, "ximea");
-	ros::NodeHandle nh;		//standard ros nodehanlde
-	ros::NodeHandle pnh("~");	//needed for parameter server
-	int frame_rate_;
-	std::string yaml_file1 = "/home/adas/indigo/catkin_ws/src/ximea_camera/config/cam1.yaml";
-	std::string yaml_file2 = "/home/adas/indigo/catkin_ws/src/ximea_camera/config/cam2.yaml";
-	std::string yaml_file3 = "/home/adas/indigo/catkin_ws/src/ximea_camera/config/cam3.yaml";
-	//std::string yaml_file4 = "/home/adas/catkin_ws/src/ximea_camera/src/cam4.yaml";
+class ximea_ros_driver : public ximea_driver{
+	public:
+	ximea_ros_driver( const ros::NodeHandle &nh, std::string cam_name, int serial_no , std::string yaml_url);
+	ximea_ros_driver( const ros::NodeHandle &nh, std::string file_name);
+	//~ximea_ros_driver();
+	virtual void setImageDataFormat(std::string s);
+	void publishImage(const ros::Time & now);	//since these 2 functions should have the same time stamp we leave it up to the user to specify the timeif it is needed to do one or the other
+	void publishCamInfo(const ros::Time &now);
+	void publishImageAndCamInfo();
+	
+	protected:
+	ros::NodeHandle pnh_;
+	camera_info_manager::CameraInfoManager *cam_info_manager_;
+	image_transport::ImageTransport *it_;
+	image_transport::Publisher ros_cam_pub_;
+	ros::Publisher cam_info_pub_;
 
-  	pnh.param<int>("frame_rate", frame_rate_, 100);
-	ros::Rate loop(frame_rate_);
-	//ximea_ros_driver xd(nh, "camera1", 0);
-	//xd.openDevice();
-	//xd.setImageDataFormat("XI_RGB24");
-	//xd.setExposure(5000);
-	//xd.setROI(172, 274, 940, 480);
-	//xd.startAcquisition();
-	//ximea_ros_cluster xd(1);
-
-	std::vector<std::string> file_names;
-
-	file_names.push_back(yaml_file1);
-	file_names.push_back(yaml_file2);
-	//file_names.push_back(yaml_file3);
-	//file_names.push_back(yaml_file4);
-
-	ximea_ros_cluster xd(file_names);
-	//std::cout << "we're here" << std::endl;
-	xd.clusterInit();
-	while (ros::ok()){	//TODO: need to robustify against replugging and cntrlc
-		ros::spinOnce();
-	//	xd.acquireImage();
-		xd.clusterAcquire();
-	//	xd.publishImageAndCamInfo();
-		xd.clusterPublishImageAndCamInfo();
-		loop.sleep();
-	}
-	xd.clusterEnd();
-	return 1;
-}
+	sensor_msgs::Image ros_image_;
+	sensor_msgs::CameraInfo cam_info_;
+	char * cam_buffer_;
+	int cam_buffer_size_;
+	int bpp_;		//the next 2 paramaeters are used by the ros_image_transport publisher
+	std::string encoding_;
+		
+	private:
+	void common_initialize(const ros::NodeHandle &nh);
+};
