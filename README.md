@@ -55,7 +55,7 @@ image_data_format: "XI_MONO8"
 * `yaml_url` is the location of the calibration information file, which is used by the camera info manager to publish the calibration parameters
 * `exposure_time` refers to the image exposure time in microseconds
 * `rect_left, rect_top, rect_height, rect_width` are used to set the image region of interest (ROI). See the Ximea xiQ API for more information (http://www.ximea.com/support/wiki/apis/XiAPI_Manual).
-`image_data_format`: sets the data format for the image. Currently, formats `XI_MONO16`, `XI_RGB24`, `XI_RGB32`, `XI_RAW8`, `XI_RAW16`, and `XI_MONO8` are supported   
+* `image_data_format`: sets the data format for the image. Currently, formats `XI_MONO16`, `XI_RGB24`, `XI_RGB32`, `XI_RAW8`, `XI_RAW16`, and `XI_MONO8` are supported   
 
 2) Create a launch file for your camera configuration.  A typical launch file will look as follows:
 
