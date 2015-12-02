@@ -30,7 +30,7 @@ std::string calib_file_names[3] = {
 std::string getCamNameFromYaml(std::string file_name){
 	std::ifstream fin(file_name.c_str());
 	if (fin.fail()){
-		std::cout << "could not open file " << file_name.c_str()<< std::endl;
+		ROS_ERROR_STREAM("could not open file " << file_name.c_str()<< std::endl);
 		exit(-1); //this has to be changed
 	}
 	
@@ -48,13 +48,13 @@ ximea_ros_cluster::ximea_ros_cluster(int num_cams) : USB_BUS_SAFETY_MARGIN(0), U
 	devices_open_ = false;
 	for (int i =0 ;i < num_cams; i ++){
 		ros::NodeHandle nh(std::string("/") + cam_names[i]);
-		std::cout << cams_.size() << std::endl;
+		//std::cout << cams_.size() << std::endl;
 		add_camera(ximea_ros_driver(nh, cam_names[i], serial_nos[i], calib_file_names[i] ));
-		std::cout << cams_.size() << std::endl;
+		//std::cout << cams_.size() << std::endl;
 	}
 	//must limit the cluster usb bandwidth to support > 2 cameras
 	xiSetParamInt(0, XI_PRM_AUTO_BANDWIDTH_CALCULATION, XI_OFF);
-	std::cout << "done constructor " << std::endl;
+	//std::cout << "done constructor " << std::endl;
 	fixed_init_ = true;
 }
 
@@ -65,10 +65,10 @@ ximea_ros_cluster::ximea_ros_cluster(std::vector<std::string> filenames) : USB_B
 		ros::NodeHandle nh(std::string("/") + cam_name);
 		add_camera(ximea_ros_driver(nh, filenames[i]));
 	}
-	std::cout << "good " << std::endl;
+	//std::cout << "good " << std::endl;
 	//must limit the cluster usb bandwidth to support > 2 cameras
 	xiSetParamInt(0, XI_PRM_AUTO_BANDWIDTH_CALCULATION, XI_OFF);
-	std::cout << "done constructor " << std::endl;
+	//std::cout << "done constructor " << std::endl;
 	fixed_init_ = false;
 }
 
@@ -81,7 +81,7 @@ void ximea_ros_cluster::add_camera(ximea_ros_driver xd){
 	//threads_.push_back(*b);
 	num_cams_++;
 	threads_.resize(num_cams_);
-	std::cout << "done camera add"<< std::endl;
+	ROS_INFO_STREAM("done camera add");
 }
 
 void ximea_ros_cluster::remove_camera(int serial_no){
@@ -102,7 +102,7 @@ void ximea_ros_cluster::remove_camera(int serial_no){
 void ximea_ros_cluster::clusterInit(){
 	
 	for (int i=0; i < cams_.size(); i++){
-		std::cout << "opening device " << cams_[i].getSerialNo() << std::endl;
+		ROS_INFO_STREAM("opening device " << cams_[i].getSerialNo());
 		cams_[i].openDevice();
 		if (fixed_init_){
 			cams_[i].setImageDataFormat("XI_MONO8");

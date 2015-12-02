@@ -44,9 +44,9 @@ void ximea_driver::assignDefaultValues(){
 ximea_driver::ximea_driver(std::string file_name){
 	assignDefaultValues();
 	readParamsFromFile(file_name);
-    
-	std::cout << serial_no_ << std::endl;
-	std::cout << auto_exposure_ << std::endl;
+    ROS_INFO_STREAM("ximea_driver: reading paramter values from file: " << file_name);
+	//ROS_INFO_STREAM(serial_no_ << std::endl);
+	//std::cout << auto_exposure_ << std::endl;
 }
 /*
 void ximea_driver::errorHandling(XI_RETURN ret, std::string message, int retry){
@@ -230,7 +230,7 @@ void ximea_driver::setExposure(int time){
 int ximea_driver::readParamsFromFile(std::string file_name){
 	std::ifstream fin(file_name.c_str());
 	if (fin.fail()){
-		std::cout << "could not open file " << file_name.c_str()<< std::endl;
+		ROS_ERROR_STREAM("could not open file " << file_name.c_str()<< std::endl);
 		exit(-1);
 	}
 	
