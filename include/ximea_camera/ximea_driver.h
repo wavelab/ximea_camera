@@ -1,3 +1,16 @@
+/******************************************************************************
+
+Copyright 2015  Arun Das (University of Waterloo) 
+                      [adas@uwaterloo.ca]
+                Abdelhamid El-Bably (University of Waterloo)
+                      [ahelbably@uwaterloo.ca]
+                Michael Tribou (University of Waterloo)
+  	                  [mjtribou@uwaterloo.ca]
+
+All rights reserved.
+
+********************************************************************************/
+
 // Sample for XIMEA Software Package V2.57
 #include <m3api/xiApi.h>
 #include <ros/ros.h>

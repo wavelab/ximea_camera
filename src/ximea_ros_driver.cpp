@@ -1,4 +1,16 @@
-#include "ximea_ros_driver.h"
+/******************************************************************************
+
+Copyright 2015  Arun Das (University of Waterloo) 
+                      [adas@uwaterloo.ca]
+                Abdelhamid El-Bably (University of Waterloo)
+                      [ahelbably@uwaterloo.ca]
+                Michael Tribou (University of Waterloo)
+  	                  [mjtribou@uwaterloo.ca]
+
+All rights reserved.
+
+********************************************************************************/
+#include <ximea_camera/ximea_ros_driver.h>
 
 ximea_ros_driver::ximea_ros_driver(const ros::NodeHandle &nh, std::string cam_name, int serial_no, std::string yaml_url):ximea_driver(serial_no, cam_name){ 
 	pnh_ = nh;

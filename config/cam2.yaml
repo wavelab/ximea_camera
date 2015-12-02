@@ -1,4 +1,4 @@
-serial_no: 33300151
+serial_no: 32300451
 cam_name: "camera2"
 yaml_url: "package://mcptam/calibrations/camera2.yaml"
 exposure_time: 30000
