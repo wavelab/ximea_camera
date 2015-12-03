@@ -20,7 +20,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
   <run_depend>roscpp</run_depend>
-  
+
   <build_depend>image_transport</build_depend>
   <run_depend>image_transport</run_depend>
 
@@ -32,6 +32,8 @@
 
   <build_depend> yaml_cpp </build_depend>
   <run_depend> yaml_cpp </run_depend>
+
+  <build_depend>roslint</build_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   sensor_msgs
   camera_info_manager
+  roslint
 )
 
 find_package(Boost REQUIRED COMPONENTS system thread)
@@ -179,3 +180,9 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+###########
+##roslint##
+###########
+set(ROSLINT_CPP_OPTS  "--filter=-whitespace/line_length,-readability/todo" )
+roslint_cpp()
