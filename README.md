@@ -33,7 +33,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# 2) Basic Usage
+# 2) Dependencies
+
+This software requires the Ximea Linux Software Package.  See http://www.ximea.com/support/wiki/apis/XIMEA_Linux_Software_Package for details.
+
+# 3) Basic Usage
 
 This software provides ROS drivers for the ximea xiQ USB 3.0 Cameras.  This driver supports image acquisition from an arbitrary number of cameras, so long as there is sufficient bandwidth on the USB 3.0 bus to perform the data transfer. In order to operate the cameras, the serial numbers of the devices must be known.
 
