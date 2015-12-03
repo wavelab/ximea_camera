@@ -92,7 +92,7 @@ while a three camera setup would have a list containing the file names for the c
 
 3) You should now be able to plug in the cameras and launch the file created in step 2.
 
-# 3) Published Topics
+# 4) Published Topics
 
 Each set of published topics will be under the namespace corresponding to the camera name. Each camera will publish:
 
