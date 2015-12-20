@@ -7,6 +7,10 @@
   <maintainer email="ahelbably@uwaterloo.ca">Abdelhamid El-Bably</maintainer>
   <license>BSD</license>
 
+  <url type="website">http://www.ros.org/wiki/ximea_camera</url>
+  <url type="repository">https://github.com/wavelab/ximea_camera/</url>
+  <url type="bugtracker">https://github.com/wavelab/ximea_camera/issues</url>
+
   <!-- The *_depend tags are used to specify dependencies -->
   <!-- Dependencies can be catkin packages or system dependencies -->
   <!-- Examples: -->
@@ -30,9 +34,6 @@
 
   <build_depend>camera_info_manager</build_depend>
   <run_depend>camera_info_manager</run_depend>
-
-  <build_depend> yaml_cpp </build_depend>
-  <run_depend> yaml_cpp </run_depend>
 
   <build_depend>roslint</build_depend>
 
