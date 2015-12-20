@@ -1,9 +1,9 @@
 /******************************************************************************
 
-Copyright 2015  Arun Das (University of Waterloo)
-                      [adas@uwaterloo.ca]
-                Abdelhamid El-Bably (University of Waterloo)
+Copyright 2015  Abdelhamid El-Bably (University of Waterloo)
                       [ahelbably@uwaterloo.ca]
+                Arun Das (University of Waterloo)
+                      [adas@uwaterloo.ca]
                 Michael Tribou (University of Waterloo)
                       [mjtribou@uwaterloo.ca]
 
