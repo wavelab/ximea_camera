@@ -14,7 +14,6 @@ All rights reserved.
 #include <ximea_camera/ximea_ros_cluster.h>
 #include <string>
 #include <vector>
-
 int serial_nos[3] = { 32300651 ,  33300151 , 32301251};
 std::string cam_names[3] = {std::string("camera1"), std::string("camera2"), std::string("camera3")};
 std::string calib_file_names[3] =

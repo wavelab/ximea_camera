@@ -13,13 +13,14 @@ All rights reserved.
 #include <ximea_camera/ximea_ros_driver.h>
 #include <string>
 #include <algorithm>
+#include <boost/make_shared.hpp>
 
 ximea_ros_driver::ximea_ros_driver(const ros::NodeHandle &nh, std::string cam_name, int serial_no, std::string yaml_url): ximea_driver(serial_no, cam_name)
 {
   pnh_ = nh;
-  cam_info_manager_ = new camera_info_manager::CameraInfoManager(pnh_, cam_name_);
+  cam_info_manager_ = boost::make_shared<camera_info_manager::CameraInfoManager>(pnh_, cam_name_);
   cam_info_manager_->loadCameraInfo(yaml_url);
-  it_ = new image_transport::ImageTransport(nh);
+  it_ = boost::make_shared<image_transport::ImageTransport>(nh);
   ros_cam_pub_ = it_->advertise(std::string("image_raw"), 1);
   cam_info_pub_ = pnh_.advertise<sensor_msgs::CameraInfo>(std::string("camera_info"), 1);
 }
@@ -27,9 +28,9 @@ ximea_ros_driver::ximea_ros_driver(const ros::NodeHandle &nh, std::string cam_na
 ximea_ros_driver::ximea_ros_driver(const ros::NodeHandle &nh, std::string file_name) : ximea_driver(file_name)
 {
   pnh_ = nh;
-  cam_info_manager_ = new camera_info_manager::CameraInfoManager(pnh_, cam_name_);
+  cam_info_manager_ = boost::make_shared<camera_info_manager::CameraInfoManager>(pnh_, cam_name_);
   cam_info_manager_->loadCameraInfo(yaml_url_);
-  it_ = new image_transport::ImageTransport(nh);
+  it_ = boost::make_shared<image_transport::ImageTransport>(nh);
   ros_cam_pub_ = it_->advertise(std::string("image_raw"), 1);
   cam_info_pub_ = pnh_.advertise<sensor_msgs::CameraInfo>(std::string("camera_info"), 1);
 }
@@ -37,9 +38,9 @@ ximea_ros_driver::ximea_ros_driver(const ros::NodeHandle &nh, std::string file_n
 void ximea_ros_driver::common_initialize(const ros::NodeHandle &nh)
 {
   pnh_ = nh;
-  cam_info_manager_ = new camera_info_manager::CameraInfoManager(pnh_, cam_name_);
+  cam_info_manager_ = boost::make_shared<camera_info_manager::CameraInfoManager>(pnh_, cam_name_);
   cam_info_manager_->loadCameraInfo("");  // TODO: yaml_url
-  it_ = new image_transport::ImageTransport(nh);
+  it_ = boost::make_shared<image_transport::ImageTransport>(nh);
   ros_cam_pub_ = it_->advertise(cam_name_ + std::string("/image_raw"), 1);
   cam_info_pub_ = pnh_.advertise<sensor_msgs::CameraInfo>(cam_name_ + std::string("/camera_info"), 1);
 }

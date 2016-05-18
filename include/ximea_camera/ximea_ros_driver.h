@@ -22,7 +22,7 @@ All rights reserved.
 #include <sensor_msgs/CameraInfo.h>
 #include <camera_info_manager/camera_info_manager.h>
 #include <string>
-
+#include <boost/shared_ptr.hpp>
 
 class ximea_ros_driver : public ximea_driver
 {
@@ -36,8 +36,8 @@ public:
 
 protected:
   ros::NodeHandle pnh_;
-  camera_info_manager::CameraInfoManager *cam_info_manager_;
-  image_transport::ImageTransport *it_;
+  boost::shared_ptr<camera_info_manager::CameraInfoManager> cam_info_manager_;
+  boost::shared_ptr<image_transport::ImageTransport> it_;
   image_transport::Publisher ros_cam_pub_;
   ros::Publisher cam_info_pub_;
 
