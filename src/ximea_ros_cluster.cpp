@@ -197,8 +197,8 @@ int ximea_ros_cluster::getCameraIndex(int serial_no)
 
 void ximea_ros_cluster::setExposure(int serial_no, int time)
 {
-  int idx;
-  if (idx = getCameraIndex(serial_no) != -1)
+  int idx = getCameraIndex(serial_no) ;
+  if (idx != -1)
   {
     cams_[idx].setExposure(time);
   }
@@ -206,8 +206,8 @@ void ximea_ros_cluster::setExposure(int serial_no, int time)
 
 void ximea_ros_cluster::setImageDataFormat(int serial_no, std::string s)
 {
-  int idx;
-  if (idx = getCameraIndex(serial_no) != -1)
+  int idx = getCameraIndex(serial_no) ;
+  if (idx != -1)
   {
     cams_[idx].setImageDataFormat(s);
   }
@@ -215,8 +215,8 @@ void ximea_ros_cluster::setImageDataFormat(int serial_no, std::string s)
 
 void ximea_ros_cluster::setROI(int serial_no, int l, int t, int w, int h)
 {
-  int idx;
-  if (idx = getCameraIndex(serial_no) != -1)
+  int idx = getCameraIndex(serial_no) ;
+  if (idx != -1)
   {
     cams_[idx].setROI(l, t, w, h);
   }
