@@ -1,0 +1,9 @@
+serial_no: 32301251
+cam_name: "camera3"
+yaml_url: "package://mcptam/calibrations/camera3.yaml"
+exposure_time: 30000
+rect_left: 200
+rect_top: 200
+rect_height: 600
+rect_width: 900
+image_data_format: "XI_MONO8"

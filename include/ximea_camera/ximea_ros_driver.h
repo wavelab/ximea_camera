@@ -36,7 +36,11 @@ public:
 
 protected:
   ros::NodeHandle pnh_;
+<<<<<<< HEAD
   boost::shared_ptr<camera_info_manager::CameraInfoManager> cam_info_manager_;
+=======
+  boost::shared_ptr<camera_info_manager::CameraInfoManager>cam_info_manager_;
+>>>>>>> ximea_2.0
   boost::shared_ptr<image_transport::ImageTransport> it_;
   image_transport::Publisher ros_cam_pub_;
   ros::Publisher cam_info_pub_;
