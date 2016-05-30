@@ -1,0 +1,9 @@
+serial_no: 33300151
+cam_name: "camera5"
+yaml_url: "package://mcptam/calibrations/camera5.yaml"
+exposure_time: 30000
+rect_left: 200
+rect_top: 200
+rect_height: 600
+rect_width: 900
+image_data_format: "XI_MONO8"
