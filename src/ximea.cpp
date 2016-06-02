@@ -12,6 +12,8 @@ All rights reserved.
 ********************************************************************************/
 
 #include <ximea_camera/ximea_ros_cluster.h>
+#include <dynamic_reconfigure/server.h>
+#include <ximea_camera/ximeaConfig.h>
 #include <string>
 #include <vector>
 
@@ -43,6 +45,13 @@ int main(int argc, char ** argv)
 
   ximea_ros_cluster xd(file_names);
   xd.clusterInit();
+
+  dynamic_reconfigure::Server<ximea_camera::ximeaConfig> server;
+  dynamic_reconfigure::Server<ximea_camera::ximeaConfig>::CallbackType f;
+
+  f = boost::bind(&ximea_ros_cluster::dynamicReconfigureCallback, xd, _1, _2);
+  server.setCallback(f);
+
   while (ros::ok())   // TODO: need to robustify against replugging and cntrlc
   {
     ros::spinOnce();

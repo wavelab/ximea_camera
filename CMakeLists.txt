@@ -11,6 +11,8 @@ set(XIMEA_LIBRARY m3api)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rospy
+  dynamic_reconfigure
   image_transport
   sensor_msgs
   camera_info_manager
@@ -79,6 +81,11 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 #   std_msgs  # Or other packages containing msgs
 # )
 
+
+generate_dynamic_reconfigure_options(
+    cfg/ximea.cfg
+)
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -122,7 +129,7 @@ include_directories(
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(ximea2_node ximea2_generate_messages_cpp)
+add_dependencies(ximea_camera_node ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(ximea_camera_node

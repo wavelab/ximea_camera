@@ -189,7 +189,11 @@ void ximea_driver::setROI(int l, int t, int w, int h)
   {
     return;
   }
-
+  if (l % 4) l -= l % 4;
+  if (w % 4) w -= w % 4;
+  if (h % 4) h -= h % 4;
+  if (t % 4) t -= t % 4;
+  
   if (l < 0 || l > 1280) rect_left_ = 0;
   else rect_left_ = l;
   if (t < 0 || t > 1024) rect_top_ = 0;

@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+PACKAGE = "ximea_camera"
+
+from dynamic_reconfigure.parameter_generator_catkin import *
+
+gen = ParameterGenerator()
+
+size_enum = gen.enum([ gen.const("Camera 1",  int_t, 0, "Camera1"),
+                       gen.const("Camera 2",  int_t, 1, "Camera2"),
+                       gen.const("Camera 3",  int_t, 2, "Camera3"),
+                       gen.const("Camera 4",  int_t, 3, "Camera4")],
+                       "Camera Number")
+
+gen.add("Exposure",    int_t,    0, "Exposure in MicroSeconds", 10000,  0, 100000)
+
+
+gen.add("camera", int_t, 0, "Defines which camera parameter to change", 1, 0, 3, edit_method=size_enum)
+
+exit(gen.generate(PACKAGE, "dynamic_tutorials", "ximea"))

@@ -29,6 +29,10 @@ All rights reserved.
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
+struct rect{
+  int x, y, w, h;
+};
+
 class ximea_driver
 {
 public:
@@ -50,6 +54,17 @@ public:
   {
     return serial_no_;
   }
+
+
+  rect getRect(){
+    rect r;
+    r.x = rect_left_;
+    r.y = rect_top_;
+    r.w = rect_width_;
+    r.h = rect_height_;
+    return r;
+  }
+
   virtual void setImageDataFormat(std::string s);  // this is virtual because the ros class needs to do a bit more work to publish the right image
   void setROI(int rect_left, int rect_top, int rect_width, int rect_height);
   void setExposure(int time);
@@ -61,7 +76,7 @@ public:
   {
     return image_;
   }
-
+  int getExposure(){ return exposure_time_; }
 protected:
   void assignDefaultValues();
 

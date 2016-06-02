@@ -17,6 +17,7 @@ All rights reserved.
 #include <boost/thread.hpp>
 #include <string>
 #include <vector>
+#include <ximea_camera/ximeaConfig.h>
 
 class ximea_ros_cluster
 {
@@ -42,6 +43,7 @@ public:
   void setExposure(int serial_no, int time);
   void setImageDataFormat(int serial_no, std::string s);
   void setROI(int serial_no, int l, int t, int w, int h);
+  void dynamicReconfigureCallback(ximea_camera::ximeaConfig &config, uint32_t level);
 
 private:
   std::vector<ximea_ros_driver> cams_;

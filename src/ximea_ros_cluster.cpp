@@ -155,6 +155,22 @@ void ximea_ros_cluster::clusterPublishImages()
   }
 }
 
+void ximea_ros_cluster::dynamicReconfigureCallback(ximea_camera::ximeaConfig &config, uint32_t level){
+  //this is a hack to get around rqt_reconfigure limitations a better solution would be to get rid of rqt_reconfigure and make a specific ximea_reconfigure gui
+
+  int idx = getCameraIndex(level);
+  if (idx != -1){
+    if (cams_[idx].getExposure() != config.exposure){
+     setExposure(level, config.exposure);
+    }
+    rect r = cams_[idx].getRect();
+    if (r.x != config.rectLeft || r.y != config.rectTop || r.w != config.rectWidth || r.h != config.rectHeight){
+      setROI(level, config.rectLeft, config.rectTop, config.rectWidth, config.rectHeight);
+    }
+    std::cout << " " << config.exposure << " " << config.rectLeft << " " << config.rectTop << " " << config.rectWidth << " " << config.rectHeight << std::endl;
+
+  }
+}
 
 void ximea_ros_cluster::clusterPublishCamInfo()
 {
