@@ -44,7 +44,8 @@ public:
   void setImageDataFormat(int serial_no, std::string s);
   void setROI(int serial_no, int l, int t, int w, int h);
   void dynamicReconfigureCallback(ximea_camera::ximeaConfig &config, uint32_t level);
-
+  void dumpDynamicConfiguration();
+  int getExposure(int serial_no){int idx = getCameraIndex(serial_no); if (idx != -1) return cams_[idx].getExposure();}
 private:
   std::vector<ximea_ros_driver> cams_;
   std::vector<boost::thread*> threads_;
@@ -54,6 +55,7 @@ private:
   const int USB_BUS_SAFETY_MARGIN;
   const int USB3_BANDWIDTH;
   bool fixed_init_;
+  bool dynamic_reconfigure_modified_;
 };
 
 #endif  // XIMEA_CAMERA_XIMEA_ROS_CLUSTER_H

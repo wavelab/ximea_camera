@@ -14,6 +14,8 @@ All rights reserved.
 #include <ximea_camera/ximea_ros_cluster.h>
 #include <string>
 #include <vector>
+#include <fstream> 
+
 int serial_nos[3] = { 32300651 ,  33300151 , 32301251};
 std::string cam_names[3] = {std::string("camera1"), std::string("camera2"), std::string("camera3")};
 std::string calib_file_names[3] =
@@ -50,6 +52,7 @@ ximea_ros_cluster::ximea_ros_cluster(int num_cams) : USB_BUS_SAFETY_MARGIN(0), U
   // must limit the cluster usb bandwidth to support > 2 cameras
   xiSetParamInt(0, XI_PRM_AUTO_BANDWIDTH_CALCULATION, XI_OFF);
   fixed_init_ = true;
+  dynamic_reconfigure_modified_ = false;
 }
 
 ximea_ros_cluster::ximea_ros_cluster(std::vector<std::string> filenames) : USB_BUS_SAFETY_MARGIN(0), USB3_BANDWIDTH(2400)
@@ -65,6 +68,7 @@ ximea_ros_cluster::ximea_ros_cluster(std::vector<std::string> filenames) : USB_B
   // must limit the cluster usb bandwidth to support > 2 cameras
   xiSetParamInt(0, XI_PRM_AUTO_BANDWIDTH_CALCULATION, XI_OFF);
   fixed_init_ = false;
+  dynamic_reconfigure_modified_ = false;
 }
 
 void ximea_ros_cluster::add_camera(ximea_ros_driver xd)
@@ -159,16 +163,18 @@ void ximea_ros_cluster::dynamicReconfigureCallback(ximea_camera::ximeaConfig &co
   //this is a hack to get around rqt_reconfigure limitations a better solution would be to get rid of rqt_reconfigure and make a specific ximea_reconfigure gui
 
   int idx = getCameraIndex(level);
+  std::cout << "idx " << idx << std::endl;
   if (idx != -1){
     if (cams_[idx].getExposure() != config.exposure){
      setExposure(level, config.exposure);
     }
+    std::cout<< "new exposure level for cam "<< idx << " : " << cams_[idx].getExposure() << std::endl;
     rect r = cams_[idx].getRect();
     if (r.x != config.rectLeft || r.y != config.rectTop || r.w != config.rectWidth || r.h != config.rectHeight){
       setROI(level, config.rectLeft, config.rectTop, config.rectWidth, config.rectHeight);
     }
     std::cout << " " << config.exposure << " " << config.rectLeft << " " << config.rectTop << " " << config.rectWidth << " " << config.rectHeight << std::endl;
-
+    dynamic_reconfigure_modified_ = true;
   }
 }
 
@@ -235,4 +241,31 @@ void ximea_ros_cluster::setROI(int serial_no, int l, int t, int w, int h)
   {
     cams_[idx].setROI(l, t, w, h);
   }
+}
+
+void ximea_ros_cluster::dumpDynamicConfiguration(){
+  if (!dynamic_reconfigure_modified_) return;
+  std::ostringstream file_name_stream, os; 
+  std::ofstream f;
+  std::string directory = "/home/turtlebot3/camera_test/src/ximea_camera/config/";
+  std::cout << "dumping config params to yaml file"  << std::endl;
+  for (int i = 0; i < cams_.size(); i ++){
+    file_name_stream << directory << cams_[i].getCamName() << "_dyn_reconfigure.yaml";
+    f.open(file_name_stream.str().c_str());
+    if (!f.is_open()) {std::cout << "could not dump file "; continue;}
+    std::cout << cams_[i].getExposure() << std::endl;
+    os << "serial_no: " << cams_[i].getSerialNo() << std::endl;
+    os << "cam_name: \"" << cams_[i].getCamName() << "\"" << std::endl;
+    os << "yaml_url: \"" << cams_[i].getYamlURL() << "\"" <<  std::endl;
+    rect r = cams_[i].getRect();
+    os << "exposure: " << cams_[i].getExposure() << std::endl;
+    os << "rect_left: " << r.x << std::endl;
+    os << "rect_top: " << r.y << std::endl;
+    os << "rect_height: " << r.h << std::endl;
+    os << "rect_width: " << r.w << std::endl;
+    os << "image_data_format: \"" << cams_[i].getImageDataFormat() << "\"" << std::endl;
+    f << os.str(); 
+    f.close();
+  }
+  
 }

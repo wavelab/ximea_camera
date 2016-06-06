@@ -16,6 +16,15 @@ All rights reserved.
 #include <ximea_camera/ximeaConfig.h>
 #include <string>
 #include <vector>
+#include <csignal> 
+
+bool gSigIntTerminateLoop = false;
+
+void sigIntHandler(int signum){
+  std::cout << "received driver terminate" << std::endl;
+  gSigIntTerminateLoop = true;
+}
+
 
 int main(int argc, char ** argv)
 {
@@ -49,16 +58,21 @@ int main(int argc, char ** argv)
   dynamic_reconfigure::Server<ximea_camera::ximeaConfig> server;
   dynamic_reconfigure::Server<ximea_camera::ximeaConfig>::CallbackType f;
 
-  f = boost::bind(&ximea_ros_cluster::dynamicReconfigureCallback, xd, _1, _2);
+  f = boost::bind(&ximea_ros_cluster::dynamicReconfigureCallback, &xd, _1, _2);
   server.setCallback(f);
+  
+  signal(SIGINT, sigIntHandler);
 
-  while (ros::ok())   // TODO: need to robustify against replugging and cntrlc
+  while (ros::ok() && !gSigIntTerminateLoop)   // TODO: need to robustify against replugging and cntrlc
   {
     ros::spinOnce();
     xd.clusterAcquire();
     xd.clusterPublishImageAndCamInfo();
     loop.sleep();
   }
+  
+  //perform cleanup 
+  xd.dumpDynamicConfiguration();
   xd.clusterEnd();
   return 1;
 }

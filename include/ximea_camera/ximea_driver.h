@@ -50,11 +50,19 @@ public:
   void stopAcquisition();
   void acquireImage();
   void triggerDevice();
-  int getSerialNo() const
-  {
-    return serial_no_;
-  }
+ 
 
+  virtual void setImageDataFormat(std::string s);  // this is virtual because the ros class needs to do a bit more work to publish the right image
+  void setROI(int rect_left, int rect_top, int rect_width, int rect_height);
+  void setExposure(int time);
+  bool hasValidHandle() { return xiH_ == NULL ? false : true; }
+  const XI_IMG& getImage() const { return image_; }
+
+  int getExposure() const { return exposure_time_; }
+  const std::string & getCamName() const { return cam_name_; }
+  const std::string & getYamlURL() const { return yaml_url_; } 
+  int getSerialNo() const { return serial_no_; }
+  const std::string & getImageDataFormat() const { return image_data_format_; }
 
   rect getRect(){
     rect r;
@@ -64,19 +72,7 @@ public:
     r.h = rect_height_;
     return r;
   }
-
-  virtual void setImageDataFormat(std::string s);  // this is virtual because the ros class needs to do a bit more work to publish the right image
-  void setROI(int rect_left, int rect_top, int rect_width, int rect_height);
-  void setExposure(int time);
-  bool hasValidHandle()
-  {
-    return xiH_ == NULL ? false : true;
-  }
-  const XI_IMG& getImage()const
-  {
-    return image_;
-  }
-  int getExposure(){ return exposure_time_; }
+  
 protected:
   void assignDefaultValues();
 

@@ -71,10 +71,13 @@ void ximea_driver::applyParameters()
 void ximea_driver::openDevice()
 {
   XI_RETURN stat;
+  //assumes only one camera on bus 
   if (serial_no_ == 0)
   {
     stat = xiOpenDevice(0, &xiH_);
     errorHandling(stat, "Open Device");
+    cam_name_ = "camera1";
+    xiGetParamInt(xiH_, XI_PRM_DEVICE_SN, &serial_no_);
   }
   else
   {
@@ -240,11 +243,9 @@ void ximea_driver::setROI(int l, int t, int w, int h)
 void ximea_driver::setExposure(int time)
 {
   XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_EXPOSURE, time);
-  errorHandling(stat, "xiOSetParamInt (Exposure Time)");
-  if (!stat)
-  {
+  if (stat == XI_OK)
     exposure_time_ = time;
-  }
+  errorHandling(stat, "xiOSetParamInt (Exposure Time)");
 }
 
 
