@@ -1,0 +1,15 @@
+<launch>
+
+<!-- Camera Node -->
+<node name="ximea" pkg="ximea_camera" type="ximea_camera_node" output="screen" >
+  <param name="frame_rate" type="int" value="60" />
+  
+  <rosparam param="camera_param_file_paths" subst_value="true">[$(find ximea_camera)/config/ximea1.yaml,$(find ximea_camera)/config/ximea2.yaml,$(find ximea_camera)/config/ximea3.yaml,$(find ximea_camera)/config/ximea4.yaml]</rosparam>
+  
+</node>
+
+</launch>
+
+
+
+
