@@ -33,9 +33,11 @@ int main(int argc, char ** argv)
   ros::NodeHandle pnh("~");
   int frame_rate_;
   std::vector<std::string> file_names;
-
+  std::string config_directory;
   pnh.param<int>("frame_rate", frame_rate_, 100);
   pnh.getParam("camera_param_file_paths", file_names);
+  
+  pnh.getParam("config_directory", config_directory);
   ros::Rate loop(frame_rate_);
 
   // check size of camera file
@@ -52,7 +54,7 @@ int main(int argc, char ** argv)
     }
   }
 
-  ximea_ros_cluster xd(file_names);
+  ximea_ros_cluster xd(file_names, config_directory);
   xd.clusterInit();
 
   dynamic_reconfigure::Server<ximea_camera::ximeaConfig> server;

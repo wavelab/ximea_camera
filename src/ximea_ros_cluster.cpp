@@ -55,7 +55,7 @@ ximea_ros_cluster::ximea_ros_cluster(int num_cams) : USB_BUS_SAFETY_MARGIN(0), U
   dynamic_reconfigure_modified_ = false;
 }
 
-ximea_ros_cluster::ximea_ros_cluster(std::vector<std::string> filenames) : USB_BUS_SAFETY_MARGIN(0), USB3_BANDWIDTH(2400)
+ximea_ros_cluster::ximea_ros_cluster(std::vector<std::string> filenames, std::string config_directory) : USB_BUS_SAFETY_MARGIN(0), USB3_BANDWIDTH(2400)
 {
   devices_open_ = false;
   for (int i = 0 ; i < filenames.size(); i ++)
@@ -64,7 +64,7 @@ ximea_ros_cluster::ximea_ros_cluster(std::vector<std::string> filenames) : USB_B
     ros::NodeHandle nh(std::string("/") + cam_name);
     add_camera(ximea_ros_driver(nh, filenames[i]));
   }
-
+  config_directory_ = config_directory;
   // must limit the cluster usb bandwidth to support > 2 cameras
   xiSetParamInt(0, XI_PRM_AUTO_BANDWIDTH_CALCULATION, XI_OFF);
   fixed_init_ = false;
@@ -263,11 +263,11 @@ void ximea_ros_cluster::setROI(int serial_no, int l, int t, int w, int h)
 }
 
 void ximea_ros_cluster::dumpDynamicConfiguration(){
-/*  if (!dynamic_reconfigure_modified_) return;
+  if (!dynamic_reconfigure_modified_) return;
   std::ostringstream file_name_stream, os; 
   std::ofstream f;
-  std::string directory = "/home/olga/camera_ws/src/ximea_camera/config/";
-  std::cout << "dumping config params to yaml file"  << std::endl;
+  std::string directory = config_directory_;
+  std::cout << "dumping config params to yaml file in " << config_directory_ << std::endl;
   for (int i = 0; i < cams_.size(); i ++){
     file_name_stream << directory << cams_[i].getCamName() << "_dyn_reconfigure.yaml";
     f.open(file_name_stream.str().c_str());
@@ -278,6 +278,7 @@ void ximea_ros_cluster::dumpDynamicConfiguration(){
     os << "yaml_url: \"" << cams_[i].getYamlURL() << "\"" <<  std::endl;
     rect r = cams_[i].getRect();
     os << "exposure: " << cams_[i].getExposure() << std::endl;
+    os << "gain: " << cams_[i].getGain() << std::endl;
     os << "rect_left: " << r.x << std::endl;
     os << "rect_top: " << r.y << std::endl;
     os << "rect_height: " << r.h << std::endl;
@@ -286,5 +287,4 @@ void ximea_ros_cluster::dumpDynamicConfiguration(){
     f << os.str(); 
     f.close();
   }
-*/
 }

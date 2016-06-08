@@ -23,7 +23,7 @@ class ximea_ros_cluster
 {
 public:
   explicit ximea_ros_cluster(int num_cams);
-  explicit ximea_ros_cluster(std::vector < std::string > filenames);
+  explicit ximea_ros_cluster(std::vector < std::string > filenames, std::string config_directory = "");
   void add_camera(ximea_ros_driver xd);
   void remove_camera(int serial_no);
 
@@ -57,6 +57,7 @@ private:
   const int USB3_BANDWIDTH;
   bool fixed_init_;
   bool dynamic_reconfigure_modified_;
+  std::string config_directory_;
   //this is a workaround hack to enable multiple cameras. It is not the ideal solution but the fastest that can be configured
   int configEval(const ximea_camera::ximeaConfig & config, int idx, const std::string  & to_eval){
     if (to_eval == "exposure"){
