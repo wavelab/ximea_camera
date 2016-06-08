@@ -38,9 +38,10 @@ public:
   {
     return devices_open_;
   }
-
+  
   // individual camera functions (encapsulated for thread security)
   void setExposure(int serial_no, int time);
+  void setGain(int serial_no, float db);
   void setImageDataFormat(int serial_no, std::string s);
   void setROI(int serial_no, int l, int t, int w, int h);
   void dynamicReconfigureCallback(ximea_camera::ximeaConfig &config, uint32_t level);
@@ -56,6 +57,58 @@ private:
   const int USB3_BANDWIDTH;
   bool fixed_init_;
   bool dynamic_reconfigure_modified_;
+  //this is a workaround hack to enable multiple cameras. It is not the ideal solution but the fastest that can be configured
+  int configEval(const ximea_camera::ximeaConfig & config, int idx, const std::string  & to_eval){
+    if (to_eval == "exposure"){
+      switch(idx){
+      case(0): return config.exposure1;
+      case(1): return config.exposure2;
+      case(2): return config.exposure3;
+      case(3): return config.exposure4;
+      default: return -1;
+      }
+    }
+   if (to_eval == "gain"){
+      switch(idx){
+      case(0): return config.gain1;
+      case(1): return config.gain2;
+      case(2): return config.gain3;
+      case(3): return config.gain4;
+      }
+   }
+   if (to_eval == "rectLeft"){
+      switch(idx){
+      case(0): return config.rectLeft1;
+      case(1): return config.rectLeft2;
+      case(2): return config.rectLeft3;
+      case(3): return config.rectLeft4;
+      }
+   }
+   if (to_eval == "rectTop"){
+      switch(idx){
+      case(0): return config.rectTop1;
+      case(1): return config.rectTop2;
+      case(2): return config.rectTop3;
+      case(3): return config.rectTop4;
+      }
+   }
+   if (to_eval == "rectWidth"){
+      switch(idx){
+      case(0): return config.rectWidth1;
+      case(1): return config.rectWidth2;
+      case(2): return config.rectWidth3;
+      case(3): return config.rectWidth4;
+      }
+   }
+   if (to_eval == "rectHeight"){
+      switch(idx){
+      case(0): return config.rectHeight1;
+      case(1): return config.rectHeight2;
+      case(2): return config.rectHeight3;
+      case(3): return config.rectHeight4;
+      }
+   }
+  }
 };
 
 #endif  // XIMEA_CAMERA_XIMEA_ROS_CLUSTER_H

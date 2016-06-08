@@ -30,6 +30,7 @@ void ximea_driver::assignDefaultValues()
   binning_enabled_ = false;
   downsample_factor_ = false;
   auto_exposure_ = false;
+  gain_ = 0;
   exposure_time_ = 1000;
   image_data_format_ = "XI_MONO8";
   rect_left_ = 0;
@@ -65,6 +66,7 @@ void ximea_driver::applyParameters()
 {
   setImageDataFormat(image_data_format_);
   setExposure(exposure_time_);
+  setGain(gain_);
   setROI(rect_left_, rect_top_, rect_width_, rect_height_);
 }
 
@@ -248,6 +250,13 @@ void ximea_driver::setExposure(int time)
   errorHandling(stat, "xiOSetParamInt (Exposure Time)");
 }
 
+void ximea_driver::setGain(float db)
+{
+  XI_RETURN stat = xiSetParamFloat(xiH_, XI_PRM_GAIN, db);
+  if (stat == XI_OK)
+    gain_ = db;
+  errorHandling(stat, "xiOSetParamInt (Gain)");
+}
 
 int ximea_driver::readParamsFromFile(std::string file_name)
 {
@@ -303,6 +312,12 @@ int ximea_driver::readParamsFromFile(std::string file_name)
   try
   {
     exposure_time_ = doc["exposure_time"].as<int>();
+  }
+  catch (std::runtime_error) {}
+
+  try
+  {
+    exposure_time_ = doc["gain"].as<float>();
   }
   catch (std::runtime_error) {}
 

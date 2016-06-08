@@ -163,17 +163,27 @@ void ximea_ros_cluster::dynamicReconfigureCallback(ximea_camera::ximeaConfig &co
   //this is a hack to get around rqt_reconfigure limitations a better solution would be to get rid of rqt_reconfigure and make a specific ximea_reconfigure gui
 
   int idx = getCameraIndex(level);
+
   std::cout << "idx " << idx << std::endl;
   if (idx != -1){
-    if (cams_[idx].getExposure() != config.exposure){
-     setExposure(level, config.exposure);
+    int config_exposure = configEval(config, idx, "exposure");
+    int config_rectLeft = configEval(config, idx, "rectLeft");
+    int config_rectTop = configEval(config, idx, "rectTop");
+    int config_rectWidth = configEval(config, idx, "rectWidth");
+    int config_rectHeight = configEval(config, idx, "rectHeight");
+    float config_gain = (float)configEval(config, idx, "gain");
+    if (cams_[idx].getExposure() != config_exposure){
+     std::cout << "setting exposure "  << std::endl;
+     setExposure(level, config_exposure);
     }
-    std::cout<< "new exposure level for cam "<< idx << " : " << cams_[idx].getExposure() << std::endl;
+    if (cams_[idx].getGain() != config_gain){
+     std::cout << "setting Gain "  << std::endl;
+     setGain(level, config_gain);
+    }
     rect r = cams_[idx].getRect();
-    if (r.x != config.rectLeft || r.y != config.rectTop || r.w != config.rectWidth || r.h != config.rectHeight){
-      setROI(level, config.rectLeft, config.rectTop, config.rectWidth, config.rectHeight);
+    if (r.x != config_rectLeft || r.y != config_rectTop || r.w != config_rectWidth || r.h != config_rectHeight){
+      setROI(level, config_rectLeft, config_rectTop, config_rectWidth, config_rectHeight);
     }
-    std::cout << " " << config.exposure << " " << config.rectLeft << " " << config.rectTop << " " << config.rectWidth << " " << config.rectHeight << std::endl;
     dynamic_reconfigure_modified_ = true;
   }
 }
@@ -225,6 +235,15 @@ void ximea_ros_cluster::setExposure(int serial_no, int time)
   }
 }
 
+void ximea_ros_cluster::setGain(int serial_no, float db)
+{
+  int idx = getCameraIndex(serial_no) ;
+  if (idx != -1)
+  {
+    cams_[idx].setGain(db);
+  }
+}
+
 void ximea_ros_cluster::setImageDataFormat(int serial_no, std::string s)
 {
   int idx = getCameraIndex(serial_no) ;
@@ -244,10 +263,10 @@ void ximea_ros_cluster::setROI(int serial_no, int l, int t, int w, int h)
 }
 
 void ximea_ros_cluster::dumpDynamicConfiguration(){
-  if (!dynamic_reconfigure_modified_) return;
+/*  if (!dynamic_reconfigure_modified_) return;
   std::ostringstream file_name_stream, os; 
   std::ofstream f;
-  std::string directory = "/home/turtlebot3/camera_test/src/ximea_camera/config/";
+  std::string directory = "/home/olga/camera_ws/src/ximea_camera/config/";
   std::cout << "dumping config params to yaml file"  << std::endl;
   for (int i = 0; i < cams_.size(); i ++){
     file_name_stream << directory << cams_[i].getCamName() << "_dyn_reconfigure.yaml";
@@ -267,5 +286,5 @@ void ximea_ros_cluster::dumpDynamicConfiguration(){
     f << os.str(); 
     f.close();
   }
-  
+*/
 }
