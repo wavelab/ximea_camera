@@ -53,6 +53,10 @@ public:
   virtual void setImageDataFormat(std::string s);  // this is virtual because the ros class needs to do a bit more work to publish the right image
   void setROI(int rect_left, int rect_top, int rect_width, int rect_height);
   void setExposure(int time);
+  void setAutoExposure(int auto_exposure);
+  void setAutoExposureLimit(int ae_limit);
+  void setAutoGainLimit(int ag_limit);
+  void setAutoExposurePriority(float exp_priority);
   bool hasValidHandle()
   {
     return xiH_ == NULL ? false : true;
@@ -73,7 +77,10 @@ protected:
   int frame_rate_;
   int bandwidth_;
   int exposure_time_;
-  bool auto_exposure_;
+  int auto_exposure_;
+  float auto_exposure_limit_;
+  int auto_gain_limit_;
+  float auto_exposure_priority_;
   bool binning_enabled_;
   int downsample_factor_;
   int rect_left_;

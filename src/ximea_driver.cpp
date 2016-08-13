@@ -29,7 +29,11 @@ void ximea_driver::assignDefaultValues()
   bandwidth_safety_margin_ = 30;
   binning_enabled_ = false;
   downsample_factor_ = false;
-  auto_exposure_ = false;
+  auto_exposure_ = 0;
+  auto_exposure_limit_ = 500000;
+  auto_gain_limit_ = 2;
+  auto_exposure_priority_ = 0.8;
+
   exposure_time_ = 1000;
   image_data_format_ = "XI_MONO8";
   rect_left_ = 0;
@@ -65,6 +69,12 @@ void ximea_driver::applyParameters()
 {
   setImageDataFormat(image_data_format_);
   setExposure(exposure_time_);
+  if (auto_exposure_ == 1){
+      setAutoExposure(auto_exposure_);
+      setAutoExposureLimit(auto_exposure_limit_);
+      setAutoGainLimit(auto_gain_limit_);
+      setAutoExposurePriority(auto_exposure_limit_);
+  }
   setROI(rect_left_, rect_top_, rect_width_, rect_height_);
 }
 
@@ -243,6 +253,48 @@ void ximea_driver::setExposure(int time)
   }
 }
 
+void ximea_driver::setAutoExposure(int auto_exposure)
+{
+  XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AEAG, auto_exposure);
+  errorHandling(stat, "xiOSetParamInt (AutoExposure Time)");
+  if (!stat)
+  {
+    // auto_exposureme_ = time;
+  }
+  xiSetParamInt(xiH_, XI_PRM_EXP_PRIORITY, 0.5);
+}
+
+void ximea_driver::setAutoExposureLimit(int ae_limit)
+{
+  XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AE_MAX_LIMIT, ae_limit);
+  errorHandling(stat, "xiOSetParamInt (AutoExposure Limit Time)");
+  if (!stat)
+  {
+    // auto_exposureme_ = time;
+  }
+}
+
+void ximea_driver::setAutoGainLimit(int ag_limit)
+{
+  XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AG_MAX_LIMIT, ag_limit);
+  errorHandling(stat, "xiOSetParamInt (AutoExposure Limit Time)");
+  if (!stat)
+  {
+    // auto_exposureme_ = time;
+  }
+}
+
+
+void ximea_driver::setAutoExposurePriority(float exp_priority)
+{
+  XI_RETURN stat = xiSetParamFloat(xiH_, XI_PRM_EXP_PRIORITY, exp_priority);
+  errorHandling(stat, "xiOSetParamInt (AutoExposure Limit Time)");
+  if (!stat)
+  {
+    // auto_exposureme_ = time;
+  }
+}
+
 
 int ximea_driver::readParamsFromFile(std::string file_name)
 {
@@ -303,7 +355,25 @@ int ximea_driver::readParamsFromFile(std::string file_name)
 
   try
   {
-    auto_exposure_ = doc["auto_exposure"].as<bool>();
+    auto_exposure_ = doc["auto_exposure"].as<int>();
+  }
+  catch (std::runtime_error) {}
+
+  try
+  {
+    auto_exposure_limit_ = doc["auto_exposure_limit"].as<int>();
+  }
+  catch (std::runtime_error) {}
+
+  try
+  {
+    auto_gain_limit_ = doc["auto_gain_limit"].as<int>();
+  }
+  catch (std::runtime_error) {}
+
+  try
+  {
+    auto_exposure_priority_ = doc["auto_exposure_priority"].as<int>();
   }
   catch (std::runtime_error) {}
 
@@ -396,6 +466,6 @@ void ximea_driver::limitBandwidth(int mbps)
 {
   if (!xiH_) return;
   XI_RETURN stat;
-  stat = xiSetParamInt(xiH_, XI_PRM_LIMIT_BANDWIDTH , mbps);
-  errorHandling(stat, "could not limit bandwidth");
+  // stat = xiSetParamInt(xiH_, XI_PRM_LIMIT_BANDWIDTH , mbps);
+  // errorHandling(stat, "could not limit bandwidth");
 }
