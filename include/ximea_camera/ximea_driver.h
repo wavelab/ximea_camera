@@ -78,7 +78,7 @@ protected:
   int bandwidth_;
   int exposure_time_;
   int auto_exposure_;
-  float auto_exposure_limit_;
+  int auto_exposure_limit_;
   int auto_gain_limit_;
   float auto_exposure_priority_;
   bool binning_enabled_;

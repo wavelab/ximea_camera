@@ -68,12 +68,13 @@ void ximea_driver::errorHandling(XI_RETURN ret, std::string message)
 void ximea_driver::applyParameters()
 {
   setImageDataFormat(image_data_format_);
-  setExposure(exposure_time_);
-  if (auto_exposure_ == 1){
+  if (0 == auto_exposure_) {
+      setExposure(exposure_time_);
+  } else {
       setAutoExposure(auto_exposure_);
       setAutoExposureLimit(auto_exposure_limit_);
       setAutoGainLimit(auto_gain_limit_);
-      setAutoExposurePriority(auto_exposure_limit_);
+      setAutoExposurePriority(auto_exposure_priority_);
   }
   setROI(rect_left_, rect_top_, rect_width_, rect_height_);
 }
@@ -261,12 +262,11 @@ void ximea_driver::setAutoExposure(int auto_exposure)
   {
     // auto_exposureme_ = time;
   }
-  xiSetParamInt(xiH_, XI_PRM_EXP_PRIORITY, 0.5);
 }
 
 void ximea_driver::setAutoExposureLimit(int ae_limit)
 {
-  XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AE_MAX_LIMIT, ae_limit);
+  XI_RETURN stat = xiSetParamFloat(xiH_, XI_PRM_AE_MAX_LIMIT, ae_limit);
   errorHandling(stat, "xiOSetParamInt (AutoExposure Limit Time)");
   if (!stat)
   {
@@ -277,7 +277,7 @@ void ximea_driver::setAutoExposureLimit(int ae_limit)
 void ximea_driver::setAutoGainLimit(int ag_limit)
 {
   XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AG_MAX_LIMIT, ag_limit);
-  errorHandling(stat, "xiOSetParamInt (AutoExposure Limit Time)");
+  errorHandling(stat, "xiOSetParamInt (AutoExposure Limit GAIN)");
   if (!stat)
   {
     // auto_exposureme_ = time;
@@ -288,7 +288,7 @@ void ximea_driver::setAutoGainLimit(int ag_limit)
 void ximea_driver::setAutoExposurePriority(float exp_priority)
 {
   XI_RETURN stat = xiSetParamFloat(xiH_, XI_PRM_EXP_PRIORITY, exp_priority);
-  errorHandling(stat, "xiOSetParamInt (AutoExposure Limit Time)");
+  errorHandling(stat, "xiOSetParamInt (AutoExposure Priority)");
   if (!stat)
   {
     // auto_exposureme_ = time;
@@ -373,7 +373,7 @@ int ximea_driver::readParamsFromFile(std::string file_name)
 
   try
   {
-    auto_exposure_priority_ = doc["auto_exposure_priority"].as<int>();
+    auto_exposure_priority_ = doc["auto_exposure_priority"].as<float>();
   }
   catch (std::runtime_error) {}
 
