@@ -42,6 +42,7 @@ void ximea_driver::assignDefaultValues()
   image_.bp_size = 0;
   acquisition_active_ = false;
   image_capture_timeout_ = 1000;
+  frame_id_ = "";
 }
 
 ximea_driver::ximea_driver(std::string file_name)
@@ -268,6 +269,11 @@ int ximea_driver::readParamsFromFile(std::string file_name)
   try
   {
     cam_name_ =  doc["cam_name"].as<std::string>();
+  }
+  catch (std::runtime_error) {}
+  try
+  {
+    frame_id_ =  doc["frame_id"].as<std::string>();
   }
   catch (std::runtime_error) {}
 

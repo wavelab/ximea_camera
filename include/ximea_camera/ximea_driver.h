@@ -68,6 +68,7 @@ protected:
   // variables for ximea api internals
   std::string cam_name_;
   int serial_no_;
+  std::string frame_id_;
   int cams_on_bus_;
   int bandwidth_safety_margin_;
   int frame_rate_;
